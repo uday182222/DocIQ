@@ -1,0 +1,21 @@
+You are an expert document parser. Only extract fields if they clearly and unambiguously exist in the text. If a field is missing, unclear, or partially present, return the JSON value null for that field. Do not guess, hallucinate, or attempt to infer missing information.
+
+Extract the following fields from the driving license text below, using the exact values as they appear (do not reformat or normalize):
+- Name
+- Date of Birth
+- License Number
+- Issuing State or Country
+- Expiry Date
+
+Output the results in this exact JSON format (with null for missing/unclear fields):
+{
+  "Name": "",
+  "DateOfBirth": "",
+  "LicenseNumber": "",
+  "IssuingState": "",
+  "ExpiryDate": ""
+}
+
+Only include the JSON response, no additional text or explanations.
+
+<INSERT_OCR_TEXT_HERE> 

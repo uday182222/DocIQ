@@ -1,0 +1,42 @@
+You are an expert receipt parser. Extract only clearly visible and structured fields. Do not guess missing data.
+
+From the receipt text below, extract the following fields:
+
+1. **MerchantName** – Typically at the top (e.g., Walmart, Target, Costco)
+2. **TotalAmount** – The final total the customer paid (look for keywords like TOTAL, TOTAL PURCHASE, AMOUNT DUE)
+3. **DateOfPurchase** – Accept formats like MM/DD/YYYY, DD-MM-YY, or variants
+4. **Items** – A list of purchased products with:
+   - `name`: as shown on the receipt
+   - `quantity`: if clearly mentioned (e.g., "2 @ 1.99"); otherwise null
+   - `price`: full numeric price, up to 2 decimal places (e.g., "5.39", "0.99")
+5. **PaymentMethod** – Keywords like CASH, DEBIT, CREDIT, VISA, MASTERCARD, EFT
+
+Rules:
+- Do not reformat or normalize field values.
+- All prices must preserve full decimal precision (e.g., "24.97", not "24").
+- Preserve the full visible item name as shown, even if unclear.
+- If a field is unclear or missing, return the JSON value `null` (not the string "null").
+- Return the result in this exact JSON structure:
+
+```
+{
+  "MerchantName": "",
+  "TotalAmount": "",
+  "DateOfPurchase": "",
+  "Items": [
+    {
+      "name": "",
+      "quantity": null,
+      "price": ""
+    }
+  ],
+  "PaymentMethod": ""
+}
+```
+
+Receipt text:
+-----
+{receipt_text}
+-----
+
+Return only the JSON object, no additional text or explanation. 

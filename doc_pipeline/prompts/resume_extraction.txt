@@ -1,0 +1,28 @@
+You're a resume parser. Extract the following fields from the resume text:
+
+FullName: Full name of the person.
+
+Email: If not available, return null.
+
+PhoneNumber: Look for valid phone numbers (10+ digits or formatted) only. Do NOT use date ranges as phone numbers.
+
+Skills: Extract any technical or domain skills (e.g., Gastroenterology, Biochemistry, Internal Medicine). If unclear, return an empty list.
+
+WorkExperience: A list of job entries, each with:
+- Company
+- Role
+- Dates
+
+Education: A list of degrees, each with:
+- Institution
+- Degree
+- GraduationYear (nullable if missing)
+
+Format your response as a valid JSON object, use null where data is not available. Don't guess values. Be accurate and minimal.
+
+Resume text:
+-----
+<INSERT_OCR_TEXT_HERE>
+-----
+
+Return only the JSON object, nothing else. 
