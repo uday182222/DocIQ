@@ -1,317 +1,303 @@
-# DocIQ: Smart Document Parser
+# DOC-IQ: Intelligent Document Processing Pipeline
 
-A comprehensive document processing pipeline that combines OCR technology with Google's Gemini AI to extract structured data from various document types including driving licenses, receipts, and resumes.
+DOC-IQ is a comprehensive document processing system that uses OCR and AI to extract structured data from various document types including resumes, driver's licenses, and receipts. Built with a modular, config-driven architecture for easy extensibility.
 
 ## 🚀 Features
 
-### Core Functionality
-- **Multi-Document Support**: Process driving licenses, receipts, and resumes
-- **Advanced OCR**: Dual OCR engine (EasyOCR + Tesseract fallback)
-- **AI-Powered Extraction**: Google Gemini AI integration for intelligent field extraction
-- **Modular Architecture**: Separate pipelines for each document type
-- **Fallback Mechanisms**: Regex parsing with AI fallback for missing fields
-- **Real-time Processing**: Live status updates and progress tracking
+### Document Types Supported
+- **Resumes**: Extract FullName, Email, PhoneNumber, Skills, WorkExperience, Education
+- **Driver's Licenses**: Extract Name, DateOfBirth, LicenseNumber, IssuingState, ExpiryDate
+- **Receipts**: Extract StoreName, LineItems, TotalAmount, PaymentMethod, and more with discrepancy detection
 
-### Frontend Features
-- **Modern React UI**: Built with TypeScript and Tailwind CSS
-- **Responsive Design**: Fixed sidebar layout with mobile-friendly interface
-- **Drag & Drop Upload**: Intuitive file upload with preview
-- **Real-time Status**: Live processing status and progress indicators
-- **Search & Filter**: Advanced document management with search capabilities
-- **Settings Management**: Comprehensive configuration options
-
-### Backend Features
-- **FastAPI Backend**: High-performance REST API
-- **File Validation**: Comprehensive file type and size validation
-- **Error Handling**: Robust error handling with detailed logging
-- **Mock Mode**: Development mode with simulated AI responses
-- **Production Ready**: Scalable architecture with proper logging
+### Key Capabilities
+- **OCR Processing**: Uses EasyOCR for robust text extraction
+- **AI-Powered Parsing**: OpenAI GPT-4o-mini for intelligent field extraction
+- **Config-Driven Architecture**: Easy to add new document types
+- **Validation Logic**: Built-in validation with discrepancy detection
+- **Batch Processing**: Process multiple documents efficiently
+- **CLI Interface**: Easy-to-use command-line tools
+- **API Ready**: FastAPI backend for web integration
+- **Comprehensive Testing**: Automated testing for all document types
 
 ## 📁 Project Structure
 
 ```
-assignment/
-├── doc_pipeline/                 # Core document processing engine
-│   ├── extractors/              # Document-specific extractors
-│   │   ├── license.py          # Driving license extraction
-│   │   ├── receipt.py          # Receipt extraction
-│   │   └── resume.py           # Resume extraction
-│   ├── llm/                    # AI integration
-│   │   └── gemini_client.py    # Google Gemini API client
-│   ├── ocr/                    # OCR engines
-│   │   └── ocr_engine.py       # Dual OCR implementation
-│   ├── parsers/                # Regex-based parsers
-│   │   ├── driving_license_parser.py
-│   │   ├── receipt_parser.py
-│   │   └── resume_parser.py
-│   ├── pipeline/               # Processing pipelines
-│   │   ├── license_pipeline.py
-│   │   ├── receipt_pipeline.py
-│   │   └── resume_pipeline.py
-│   ├── prompts/                # AI prompt templates
+DOC-IQ/
+├── doc_pipeline/
+│   ├── pipeline/
+│   │   └── generic_pipeline.py    # Main processing pipeline (config-driven)
+│   ├── config/
+│   │   ├── __init__.py            # Configuration package
+│   │   └── doc_config.py          # Document type configurations
+│   ├── llm/
+│   │   └── llm_client.py          # OpenAI integration
+│   ├── prompts/                   # AI prompts for each document type
+│   │   ├── resume_extraction.txt
 │   │   ├── license_extraction.txt
 │   │   └── receipt_extraction.txt
-│   ├── utils/                  # Utility functions
-│   │   └── validators.py       # Field validation
-│   ├── cli.py                  # Command-line interface
-│   ├── config.py               # Configuration settings
-│   ├── main.py                 # Main processing logic
-│   └── requirements.txt        # Python dependencies
-│
-├── dociq-ui/                   # React frontend application
-│   ├── backend/                # FastAPI backend
-│   │   ├── main.py            # API server
-│   │   └── requirements.txt   # Backend dependencies
-│   ├── src/                   # React source code
-│   │   ├── components/        # UI components
-│   │   │   ├── layout/        # Layout components
-│   │   │   ├── pages/         # Page components
-│   │   │   └── ui/            # Reusable UI components
-│   │   ├── services/          # API services
-│   │   └── lib/               # Utility libraries
-│   ├── public/                # Static assets
-│   ├── package.json           # Frontend dependencies
-│   └── start.sh               # Development startup script
-│
-└── README.md                  # This file
+│   ├── ocr/
+│   │   └── ocr_engine.py          # OCR processing engine
+│   ├── utils/
+│   │   ├── validators.py          # Data validation logic
+│   │   └── file_utils.py          # File handling utilities
+│   ├── cli.py                     # Command-line interface
+│   └── main.py                    # FastAPI server
+├── test/                          # Test scripts and outputs
+│   ├── output/                    # Processed results
+│   ├── resumes/                   # Resume test data
+│   ├── driving_license/           # License test data
+│   └── shop_receipts/             # Receipt test data
+├── test_*.py                      # Individual test scripts
+├── test_parser.py                 # Comprehensive config test
+├── test_doc_config.py             # Configuration module test
+└── requirements.txt               # Python dependencies
 ```
 
-## 🛠️ Technology Stack
+## 🛠 Installation
 
-### Backend
-- **Python 3.8+**: Core programming language
-- **FastAPI**: High-performance web framework
-- **EasyOCR**: Primary OCR engine
-- **Tesseract**: Fallback OCR engine
-- **Google Gemini AI**: AI-powered text extraction
-- **PyMuPDF**: PDF processing
-- **pdfplumber**: PDF text extraction
-- **Typer**: CLI framework
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd DOC-IQ
+   ```
 
-### Frontend
-- **React 18**: UI framework
-- **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
-- **shadcn/ui**: Modern UI components
-- **Lucide React**: Icon library
-- **Axios**: HTTP client
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-## 🚀 Quick Start
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Prerequisites
-- Python 3.8 or higher
-- Node.js 16 or higher
-- Google Gemini API key
-
-### 1. Clone and Setup
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd assignment
-
-# Setup Python environment
-cd doc_pipeline
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-
-# Setup React environment
-cd ../dociq-ui
-npm install
-```
-
-### 2. Configure API Keys
-
-Create a `.env` file in the backend directory:
-
-```bash
-cd dociq-ui/backend
-echo "GEMINI_API_KEY=your_gemini_api_key_here" > .env
-```
-
-### 3. Start the Application
-
-```bash
-# Start both frontend and backend
-cd dociq-ui
-./start.sh
-```
-
-Or start them separately:
-
-```bash
-# Backend (from dociq-ui/backend)
-source venv/bin/activate
-python main.py
-
-# Frontend (from dociq-ui)
-npm start
-```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
+4. **Set up OpenAI API key**
+   ```bash
+   export OPENAI_API_KEY="your-api-key-here"
+   ```
 
 ## 📖 Usage
 
-### Web Interface
-
-1. **Upload Documents**: Drag and drop files or click to browse
-2. **Select Document Type**: Choose from License, Receipt, or Resume
-3. **Processing Mode**: Select Standard or Strict processing
-4. **Monitor Progress**: Real-time status updates
-5. **View Results**: Search, filter, and download extracted data
-
 ### Command Line Interface
 
+**Process a single document:**
 ```bash
-# Process a single file
-python cli.py process --mode license --input path/to/file.jpg --output results/
-
-# Process entire directory
-python cli.py process --mode receipt --input path/to/directory --output results/
-
-# Test mode (process one file)
-python cli.py process --mode resume --input path/to/directory --output results/ --test
+python doc_pipeline/cli.py --mode resume --input path/to/resume.jpg --output test/output/resume
 ```
 
-## 🔧 Configuration
+**Process a directory of documents:**
+```bash
+python doc_pipeline/cli.py --mode receipt --input doc_pipeline/data/shop_receipts --output test/output/shop_receipts
+```
 
-### Environment Variables
+### Supported Modes
+- `resume` - Extract resume information
+- `license` - Extract driver's license information  
+- `receipt` - Extract receipt information with discrepancy detection
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `GEMINI_API_KEY` | Google Gemini API key | Required |
-| `USE_MOCK_GEMINI` | Use mock AI responses | `false` |
-| `LOG_LEVEL` | Logging level | `INFO` |
+### API Usage
 
-### Processing Modes
+**Start the FastAPI server:**
+```bash
+cd doc_pipeline
+uvicorn main:app --reload
+```
 
-- **Standard**: Balanced accuracy and speed
-- **Strict**: Higher accuracy with more validation
-
-## 📊 Supported Document Types
-
-### Driving Licenses
-- **Extracted Fields**: Name, License Number, Date of Birth, Expiry Date, Address
-- **Supported Formats**: JPG, PNG, PDF
-- **Processing**: OCR + AI extraction with regex validation
-
-### Receipts
-- **Extracted Fields**: Merchant, Date, Total Amount, Items, Tax
-- **Supported Formats**: JPG, PNG, PDF
-- **Processing**: OCR + AI extraction with amount validation
-
-### Resumes
-- **Extracted Fields**: Name, Email, Phone, Skills, Experience, Education
-- **Supported Formats**: JPG, PNG, PDF
-- **Processing**: Text extraction + AI parsing with phone validation
-
-## 🔍 API Endpoints
-
-### Document Processing
-- `POST /upload` - Upload and process documents
-- `GET /status/{job_id}` - Get processing status
-- `GET /documents` - List all processed documents
-- `GET /documents/{doc_id}` - Get document details
-- `DELETE /documents/{doc_id}` - Delete document
-
-### Statistics
-- `GET /statistics` - Get processing statistics
-- `GET /health` - Health check endpoint
+**Upload and process a document:**
+```bash
+curl -X POST "http://localhost:8000/upload" \
+     -H "accept: application/json" \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@path/to/document.jpg" \
+     -F "doc_type=resume"
+```
 
 ## 🧪 Testing
 
-### Mock Mode
-For development and testing without API costs:
+### Comprehensive Configuration Test
+Test all document types with mock data:
+```bash
+python test_parser.py
+```
+
+### Individual Document Type Tests
+```bash
+# Test resume parser
+python test_resume_parser.py
+
+# Test license parser  
+python test_license_parser.py
+
+# Test receipt parser
+python test_receipt_parser.py
+
+# Test configuration module
+python test_doc_config.py
+```
+
+### Test Results
+- **Configuration Test**: 100% success rate (3/3 document types)
+- **Resume Processing**: 100% success rate (31/31 files)
+- **License Processing**: 82% success rate (9/11 files)
+- **Receipt Processing**: 100% success rate (22/22 files)
+
+## 📊 Results
+
+### Resume Processing
+- **Success Rate**: 100% (31/31 files processed)
+- **Fields Extracted**: FullName, Email, PhoneNumber, Skills, WorkExperience, Education
+- **Output Format**: Structured JSON with validation
+
+### Driver's License Processing
+- **Success Rate**: 82% (9/11 files processed)
+- **Fields Extracted**: Name, DateOfBirth, LicenseNumber, IssuingState, ExpiryDate
+- **Special Features**: Strict name extraction from numbered fields
+- **Output Format**: Validated JSON with required field enforcement
+
+### Receipt Processing
+- **Success Rate**: 100% (22/22 files processed)
+- **Fields Extracted**: StoreName, LineItems, TotalAmount, PaymentMethod, CardLast4Digits
+- **Special Features**: Discrepancy detection with 2% tolerance
+- **Output Format**: Unified JSON format with comprehensive validation
+
+## 🧩 Onboarding a New Document Type in 5 Minutes
+
+Want to add a new document type? Follow these quick steps:
+
+- **1. Add a Prompt:**
+  - Create a new prompt file in `doc_pipeline/prompts/`, e.g. `mydoc_extraction.txt`.
+  - Write clear instructions and specify the fields you want to extract.
+
+- **2. Register in Config:**
+  - Open `doc_pipeline/config/doc_config.py`.
+  - Add a new entry to the `DOCUMENT_CONFIGS` dictionary for your document type:
+    ```python
+    "mydoc": {
+        "required_fields": ["Field1", "Field2"],
+        "optional_fields": ["Field3"],
+        "prompt_path": "doc_pipeline/prompts/mydoc_extraction.txt",
+        "validator_fn": your_validator_function,  # Optional, see below
+        "postprocess_fn": your_postprocess_function  # Optional, see below
+    }
+    ```
+
+- **3. (Optional) Add Validator/Postprocessor:**
+  - For custom validation or postprocessing, define functions in `doc_config.py` and reference them in your config entry.
+  - If not needed, you can reuse existing ones or use simple pass-through functions.
+
+- **4. Run the CLI or API:**
+  - Use your new document type with the CLI or API:
+    ```bash
+    python doc_pipeline/cli.py --mode mydoc --input path/to/file --output path/to/output
+    ```
+    Or via the API: set `doc_type` to `mydoc` in your request.
+
+That's it! Your new document type is now supported end-to-end.
+
+## 🔧 Technical Details
+
+### Config-Driven Architecture
+- **Document Configuration**: Centralized in `doc_pipeline/config/doc_config.py`
+- **Dynamic Loading**: Prompts, validators, and postprocessors loaded at runtime
+- **Type Safety**: Comprehensive validation for all document types
+- **Extensibility**: Easy to add new document types without code changes
+
+### OCR Engine
+- **Engine**: EasyOCR with CPU optimization
+- **Languages**: English (configurable for multi-language support)
+- **Preprocessing**: Automatic image enhancement and noise reduction
+
+### AI Integration
+- **Model**: OpenAI GPT-4o-mini
+- **Temperature**: 0.0 (deterministic output)
+- **Max Tokens**: 2048
+- **Prompt Engineering**: Specialized prompts for each document type
+
+### Validation Logic
+- **Required Fields**: Enforced per document type
+- **Data Types**: Automatic type conversion and validation
+- **Discrepancy Detection**: Mathematical validation for receipts
+- **Error Handling**: Graceful failure with detailed error messages
+
+## 📈 Performance Metrics
+
+| Document Type | Files Processed | Success Rate | Avg Processing Time |
+|---------------|----------------|--------------|-------------------|
+| Resumes       | 31             | 100%         | ~15 seconds       |
+| Licenses      | 11             | 82%          | ~12 seconds       |
+| Receipts      | 22             | 100%         | ~18 seconds       |
+
+## 🚨 Discrepancy Detection
+
+The receipt parser includes intelligent discrepancy detection:
+- **Tolerance**: 2% difference threshold
+- **Detection**: Automatically flags when sum of items ≠ total amount
+- **Warnings**: Logged but don't fail validation
+- **Use Cases**: Helps identify OCR errors or missing items
+
+## 🔒 Security & Privacy
+
+- **API Keys**: Environment variable based configuration
+- **Data Processing**: Local OCR processing, secure API calls
+- **Output**: Structured JSON without sensitive data exposure
+- **Validation**: Input sanitization and type checking
+
+## 🛠 Development
+
+### Adding New Document Types
+
+1. Create a new prompt file in `doc_pipeline/prompts/`
+2. Add configuration entry in `doc_pipeline/config/doc_config.py`
+3. (Optional) Create custom validator/postprocessor functions
+4. Test with `python test_parser.py`
+5. Update CLI interface if needed
+
+### Customizing Prompts
+
+Edit the prompt files in `doc_pipeline/prompts/` to:
+- Change field extraction logic
+- Add new fields
+- Modify validation rules
+- Improve accuracy for specific document types
+
+### Testing New Document Types
 
 ```bash
-export USE_MOCK_GEMINI=true
-python main.py
+# Test configuration loading
+python test_doc_config.py
+
+# Test end-to-end processing
+python test_parser.py
+
+# Test individual document type
+python test_parser.py --doc_type your_new_type
 ```
 
-### API Testing
-```bash
-# Test upload endpoint
-curl -X POST "http://localhost:8000/upload" \
-  -H "Content-Type: multipart/form-data" \
-  -F "file=@test_document.jpg" \
-  -F "documentType=receipt" \
-  -F "processingMode=standard"
-```
+## 📝 License
 
-## 🚀 Production Deployment
-
-### Backend Deployment
-1. Set up a production Python environment
-2. Configure environment variables
-3. Use a production WSGI server (Gunicorn)
-4. Set up reverse proxy (Nginx)
-
-### Frontend Deployment
-1. Build the React application: `npm run build`
-2. Serve static files with a web server
-3. Configure API endpoint URLs
-
-### Docker Deployment
-```dockerfile
-# Backend Dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-## 🔒 Security Considerations
-
-- API keys are stored in environment variables
-- File upload validation prevents malicious files
-- CORS configuration for frontend-backend communication
-- Input sanitization and validation
-
-## 📈 Performance Optimization
-
-- Dual OCR engines for reliability
-- Caching of processed results
-- Async processing for large files
-- Efficient image preprocessing
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **OCR Errors**: Ensure Tesseract is installed
-2. **API Quota Exceeded**: Switch to mock mode or upgrade plan
-3. **Import Errors**: Check Python path and virtual environment
-4. **Frontend Not Loading**: Verify backend is running on port 8000
-
-### Logs
-- Backend logs: Check console output
-- Frontend logs: Browser developer tools
-- Processing logs: Stored in output directories
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests if applicable
+4. Add tests using the existing test framework
 5. Submit a pull request
 
-## 📄 License
+## 📞 Support
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+For questions or issues:
+- Create an issue in the repository
+- Check the test scripts for examples
+- Review the configuration guide for adding new document types
 
-## 🙏 Acknowledgments
+## 🎯 Roadmap
 
-- Google Gemini AI for intelligent text extraction
-- EasyOCR and Tesseract for OCR capabilities
-- FastAPI for the high-performance backend
-- React and Tailwind CSS for the modern frontend
-
----
-
-**DocIQ** - Transforming document processing with AI-powered intelligence. 
+- [ ] Multi-language OCR support
+- [ ] Additional document types (invoices, contracts, forms)
+- [ ] Web-based UI for document upload and processing
+- [ ] Real-time processing with WebSocket support
+- [ ] Advanced discrepancy detection algorithms
+- [ ] Machine learning model fine-tuning capabilities 

@@ -1,21 +1,54 @@
-You are an expert document parser. Only extract fields if they clearly and unambiguously exist in the text. If a field is missing, unclear, or partially present, return the JSON value null for that field. Do not guess, hallucinate, or attempt to infer missing information.
+You are a driver's license parser specialized in Irish (ÉIRE) driving licenses. Extract the following fields from the license text, even if the OCR output is garbled or contains errors.
 
-Extract the following fields from the driving license text below, using the exact values as they appear (do not reformat or normalize):
-- Name
-- Date of Birth
-- License Number
-- Issuing State or Country
-- Expiry Date
+Extract ONLY:
+- Name: The full name of the license holder (combine first and last name with space)
+- DateOfBirth: The date of birth (in any format)
+- LicenseNumber: The driver's license number (typically alphanumeric)
+- IssuingState: The state/country that issued the license (look for "IRELAND", "IRL", "ÉIRE")
+- ExpiryDate: The expiration date of the license
 
-Output the results in this exact JSON format (with null for missing/unclear fields):
-{
-  "Name": "",
-  "DateOfBirth": "",
-  "LicenseNumber": "",
-  "IssuingState": "",
-  "ExpiryDate": ""
-}
+STRICT RULES FOR NAME EXTRACTION:
+- The full name MUST be constructed strictly from the field numbers:
+  → 1. (Last Name), 2. (First Name)
+- Always join field 2 after field 1 with a space. For example:
+  Field 1: Collins
+  Field 2: Aaron
+  → Full Name: "Collins Aaron"
+- Do NOT use names hallucinated from text like "DRIVING LICENCE", random capitalized words, or license classes (like A1, B2, etc.)
+- If field 1 or 2 is missing or unclear, and no valid fallback is found, set `"Name": null`.
 
-Only include the JSON response, no additional text or explanations.
+❌ Incorrect Example:
+  OCR: Aaron IICOVO
+  Output: "Aaron IICOVO" ❌
 
-<INSERT_OCR_TEXT_HERE> 
+✅ Correct Example:
+  Field 1: Collins
+  Field 2: Aaron
+  Output: "Collins Aaron" ✅
+
+Guidelines for Irish licenses:
+- Look for numbered fields like "1.", "2.", "3.", "4a.", "5." etc.
+- Field 1 and 2 often contain first and last name respectively
+- Field 3 typically contains date of birth
+- Field 4a typically contains expiry date
+- Field 5 typically contains license number
+- The issuing state is usually "IRELAND" or "ÉIRE" in the header
+- OCR may be garbled - look for partial matches and patterns
+- Dates may be in DD.MM.YY or DD/MM/YYYY format
+- License numbers are typically 8-10 character alphanumeric strings
+
+Fallback strategies:
+- If numbered fields are unclear, look for names in the first few lines
+- If "IRELAND" is not found, look for "IRL", "ÉIRE", or "EIRE"
+- If exact field numbers are missing, infer from context and position
+- For garbled text, try to identify patterns and partial matches
+- BUT NEVER hallucinate names from random text or license headers
+
+Output must be valid JSON with all five fields. Use null for missing values.
+
+License Text:
+-----
+{{OCR_TEXT}}
+-----
+
+Return only a single valid JSON object. 

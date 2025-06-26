@@ -1,42 +1,49 @@
-You are an expert receipt parser. Extract only clearly visible and structured fields. Do not guess missing data.
+🧠 Unified Receipt Extraction Prompt
+You are an intelligent document parser. Given a scanned or OCR-extracted receipt, extract structured data with maximum accuracy and consistency.
 
-From the receipt text below, extract the following fields:
+Your goal is to return a valid JSON object containing the following fields:
 
-1. **MerchantName** – Typically at the top (e.g., Walmart, Target, Costco)
-2. **TotalAmount** – The final total the customer paid (look for keywords like TOTAL, TOTAL PURCHASE, AMOUNT DUE)
-3. **DateOfPurchase** – Accept formats like MM/DD/YYYY, DD-MM-YY, or variants
-4. **Items** – A list of purchased products with:
-   - `name`: as shown on the receipt
-   - `quantity`: if clearly mentioned (e.g., "2 @ 1.99"); otherwise null
-   - `price`: full numeric price, up to 2 decimal places (e.g., "5.39", "0.99")
-5. **PaymentMethod** – Keywords like CASH, DEBIT, CREDIT, VISA, MASTERCARD, EFT
-
-Rules:
-- Do not reformat or normalize field values.
-- All prices must preserve full decimal precision (e.g., "24.97", not "24").
-- Preserve the full visible item name as shown, even if unclear.
-- If a field is unclear or missing, return the JSON value `null` (not the string "null").
-- Return the result in this exact JSON structure:
-
-```
 {
-  "MerchantName": "",
-  "TotalAmount": "",
+  "StoreName": "",
+  "StoreAddress": "",
+  "StorePhone": "",
   "DateOfPurchase": "",
-  "Items": [
+  "TransactionTime": "",
+  "ReceiptID": "",
+  "LineItems": [
     {
       "name": "",
-      "quantity": null,
-      "price": ""
+      "quantity": 1,
+      "price": 0.00
     }
   ],
-  "PaymentMethod": ""
+  "Subtotal": 0.00,
+  "Tax": 0.00,
+  "TotalAmount": 0.00,
+  "PaymentMethod": "",
+  "CardLast4Digits": "",
+  "DiscrepancyWarning": false
 }
-```
 
-Receipt text:
------
-{receipt_text}
------
+Rules:
 
-Return only the JSON object, no additional text or explanation. 
+If StoreName is missing, infer it from header text like "Walmart", "Costco", etc.
+
+If Subtotal or Tax is not available, skip them — do not hallucinate.
+
+If TotalAmount ≠ sum of LineItems + Tax (tolerance 2%), set "DiscrepancyWarning": true
+
+Parse prices from OCR even when symbols ($, ₹) are inconsistent.
+
+If quantity is missing, default to 1.
+
+If CardLast4Digits is not visible, leave blank.
+
+Be robust: Receipt may be tilted, contain stamps, or show partial information.
+
+Return only the JSON object with accurate field names. No explanations, no extra text.
+
+📝 OCR TEXT:
+-----
+{{OCR_TEXT}}
+----- 

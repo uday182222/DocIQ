@@ -1,28 +1,28 @@
-You're a resume parser. Extract the following fields from the resume text:
+You are a resume parser. Extract the following fields from the resume text. The structure may be informal or missing section headers—use your reasoning to infer sections and fields.
 
-FullName: Full name of the person.
+Extract ONLY:
+- FullName: The person's full name. If no header, infer from the first line or prominent name.
+- Email: Any valid email address. If missing, return null.
+- PhoneNumber: Any valid phone number (10+ digits or formatted). If missing, return null.
+- Skills: Only domain-specific or technical skills (e.g., Pathology, Python, Biochemistry). Avoid soft skills.
+- WorkExperience: List of jobs, each with:
+    - Company
+    - Role
+    - Dates
+- Education: List of degrees, each with:
+    - Institution
+    - Degree (e.g., BA, PhD, Postdoc)
+    - GraduationYear (if missing, set to null)
 
-Email: If not available, return null.
+Guidelines:
+- If "Education" or "Employment" are embedded in long sentences, still extract them.
+- Infer sections from layout, job titles, or institution names even if headers are missing.
+- Ignore publications, awards, references, hobbies, or memberships.
+- Output must be valid JSON. Do not include explanations or markdown.
 
-PhoneNumber: Look for valid phone numbers (10+ digits or formatted) only. Do NOT use date ranges as phone numbers.
-
-Skills: Extract any technical or domain skills (e.g., Gastroenterology, Biochemistry, Internal Medicine). If unclear, return an empty list.
-
-WorkExperience: A list of job entries, each with:
-- Company
-- Role
-- Dates
-
-Education: A list of degrees, each with:
-- Institution
-- Degree
-- GraduationYear (nullable if missing)
-
-Format your response as a valid JSON object, use null where data is not available. Don't guess values. Be accurate and minimal.
-
-Resume text:
+Resume Text:
 -----
-<INSERT_OCR_TEXT_HERE>
+{{OCR_TEXT}}
 -----
 
-Return only the JSON object, nothing else. 
+Return only a single valid JSON object. 
